@@ -1,4 +1,4 @@
-package com.example.caremate.ui.slideshow;
+package com.example.caremate.ui.checkin;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,25 +11,26 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import android.widget.TextView;
 
 import com.example.caremate.R;
-import com.example.caremate.databinding.FragmentAlarmBinding;
+import com.example.caremate.databinding.FragmentCheckinBinding;
 
-public class SlideshowFragment extends Fragment {
+public class CheckinFragment extends Fragment {
 
-    private SlideshowViewModel slideshowViewModel;
-    private FragmentAlarmBinding binding;
+    private CheckinViewModel checkinViewModel;
+    private FragmentCheckinBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        slideshowViewModel =
-                new ViewModelProvider(this).get(SlideshowViewModel.class);
+        checkinViewModel =
+                new ViewModelProvider(this).get(CheckinViewModel.class);
 
-        binding = FragmentAlarmBinding.inflate(inflater, container, false);
+        binding = FragmentCheckinBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        final TextView textView = binding.textSlideshow;
-        slideshowViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        final TextView textView = binding.textGallery;
+        checkinViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

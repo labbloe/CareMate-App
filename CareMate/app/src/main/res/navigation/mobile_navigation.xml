@@ -12,14 +12,29 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/nav_gallery"
-        android:name="com.example.caremate.ui.gallery.GalleryFragment"
+        android:id="@+id/nav_medication"
+        android:name="com.example.caremate.ui.medication.MedicationFragment"
         android:label="@string/menu_medication"
         tools:layout="@layout/fragment_medication" />
 
     <fragment
-        android:id="@+id/nav_slideshow"
-        android:name="com.example.caremate.ui.slideshow.SlideshowFragment"
+        android:id="@+id/nav_alarm"
+        android:name="com.example.caremate.ui.alarm.AlarmFragment"
         android:label="@string/menu_alarm"
         tools:layout="@layout/fragment_alarm" />
+    <fragment
+        android:id="@+id/nav_notification"
+        android:name="com.example.caremate.ui.notification.NotificationFragment"
+        android:label="@string/menu_notifications"
+        tools:layout="@layout/fragment_notification" />
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.example.caremate.ui.settings.SettingsFragment"
+        android:label="@string/menu_settings"
+        tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/nav_checkin"
+        android:name="com.example.caremate.ui.checkin.CheckinFragment"
+        android:label="@string/menu_checkin"
+        tools:layout="@layout/fragment_checkin" />
 </navigation>
