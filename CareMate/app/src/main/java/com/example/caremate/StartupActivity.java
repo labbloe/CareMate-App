@@ -6,6 +6,7 @@ import android.text.Layout;
 import android.view.View;
 import android.view.Menu;
 import android.widget.TextView;
+import android.widget.LinearLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -19,18 +20,31 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class StartupActivity extends AppCompatActivity{
 
+    boolean deviceConnected = false;
+    LinearLayout logoPage;
+    LinearLayout connectPage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
+        logoPage = (LinearLayout) findViewById(R.id.startupLogo);
+        connectPage = (LinearLayout) findViewById(R.id.findDevice);
 
-        TextView logo = (TextView) findViewById(R.id.startupLogo);
 
     }
 
     public void onClick(View v){
-        Intent mainActivity = new Intent(StartupActivity.this, MainActivity.class);
-        //mainActivity.putExtra("key", value); //pass parameters
-        StartupActivity.this.startActivity(mainActivity);
+        if(deviceConnected == false){
+            logoPage.setVisibility(View.GONE);
+            connectPage.setVisibility(View.VISIBLE);
+            deviceConnected = true;
+
+        }
+        else{
+            Intent mainActivity = new Intent(StartupActivity.this, MainActivity.class);
+            //mainActivity.putExtra("key", value); //pass parameters
+            StartupActivity.this.startActivity(mainActivity);
+        }
     }
 }

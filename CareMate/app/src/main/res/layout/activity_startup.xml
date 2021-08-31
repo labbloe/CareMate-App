@@ -4,18 +4,36 @@
     android:layout_height="match_parent">
 
     <LinearLayout
+        android:id="@+id/startupLogo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:visibility="visible"
         android:gravity="center">
         <TextView
-            android:id="@+id/startupLogo"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:textSize="50dp"
+            android:textSize="50sp"
             android:onClick="onClick"
             android:clickable="true"
             android:fontFamily="sans-serif-condensed-light"
             android:text="Care Mate">
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/findDevice"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:gravity="center">
+        <TextView
+            android:id="@+id/connectText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize = "70sp"
+            android:gravity="center"
+            android:fontFamily="sans-serif-condensed-light"
+            android:text="Connecting to your Care-Mate">
         </TextView>
     </LinearLayout>
 
