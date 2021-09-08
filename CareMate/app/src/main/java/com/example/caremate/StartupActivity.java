@@ -1,12 +1,17 @@
 package com.example.caremate;
 
+import android.Manifest;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.text.Layout;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +23,8 @@ import android.widget.Toast;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
@@ -41,12 +48,31 @@ public class StartupActivity extends AppCompatActivity{
         logoPage = (LinearLayout) findViewById(R.id.startupLogo);
         connectPage = (LinearLayout) findViewById(R.id.findDevice);
 
+        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        if (!isGpsEnabled) {
+            startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 1);
+        }
+
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        StartupActivity.this,
+                        new String[]{Manifest.permission.ACCESS_BACKGROUND_LOCATION},
+                        1);
+            }
+        }
+
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if(bluetoothAdapter == null){
             Toast.makeText(this,"Device Doesn't Support Bluetooth",Toast.LENGTH_LONG).show();
         }
-        IntentFilter filter = new IntentFilter();
-        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(receiver, filter);
 
 
@@ -55,6 +81,7 @@ public class StartupActivity extends AppCompatActivity{
     // Create a BroadcastReceiver for ACTION_FOUND.
     private final BroadcastReceiver receiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
+            Log.w("onReceive", "Device found!");
             String action = intent.getAction();
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Discovery has found a device. Get the BluetoothDevice
@@ -65,7 +92,7 @@ public class StartupActivity extends AppCompatActivity{
 
                 Log.w("Discovery", "Name: " + deviceName + "  MAC: " + deviceHardwareAddress);
 
-                if(deviceHardwareAddress == "78:4f:43:4f:67:d4"){
+                if(deviceName.contains("CareMate")){
                     Toast.makeText(StartupActivity.this, "Device FOUND using discovery!", Toast.LENGTH_LONG).show();
                 }
             }
@@ -96,10 +123,14 @@ public class StartupActivity extends AppCompatActivity{
                     String deviceName = device.getName();
                     String deviceMAC = device.getAddress();
                     Log.w("Device", "Name: " + deviceName + "  MAC: " + deviceMAC);
-                    if(deviceName == "CareMate"){
+                    if(deviceName.contains("CareMate")){
                         Toast.makeText(this, "Device FOUND!", Toast.LENGTH_LONG).show();
+                        deviceConnected = true;
+                        Intent mainActivity = new Intent(StartupActivity.this, MainActivity.class);
+                        //mainActivity.putExtra("key", value); //pass parameters
+                        StartupActivity.this.startActivity(mainActivity);
                     }
-                    else{
+                    else if(!deviceConnected){
                         Toast.makeText(this, "no saved device match", Toast.LENGTH_LONG).show();
                     }
                 }
