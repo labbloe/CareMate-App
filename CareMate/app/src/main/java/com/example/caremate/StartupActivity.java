@@ -39,7 +39,7 @@ public class StartupActivity extends AppCompatActivity{
 
     boolean deviceConnected = false;
     LinearLayout logoPage;
-    RelativeLayout connectPage;
+    LinearLayout connectPage;
     BluetoothAdapter bluetoothAdapter;
 
     @Override
@@ -47,13 +47,14 @@ public class StartupActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
         logoPage = (LinearLayout) findViewById(R.id.startupLogo);
-        connectPage = (RelativeLayout) findViewById(R.id.findDevice);
+        connectPage = (LinearLayout) findViewById(R.id.findDevice);
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
         if (!isGpsEnabled) {
             startActivityForResult(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS), 1);
         }
+        checkLocationPermission();
 
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -72,8 +73,6 @@ public class StartupActivity extends AppCompatActivity{
             Toast.makeText(this,"Device Doesn't Support Bluetooth",Toast.LENGTH_LONG).show();
         }
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
-        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         registerReceiver(receiver, filter);
 
 
@@ -84,6 +83,8 @@ public class StartupActivity extends AppCompatActivity{
         public void onReceive(Context context, Intent intent) {
             Log.w("onReceive", "Device found!");
             String action = intent.getAction();
+            Log.w("onReceive","Action: " + action);
+
             if (BluetoothDevice.ACTION_FOUND.equals(action)) {
                 // Discovery has found a device. Get the BluetoothDevice
                 // object and its info from the Intent.
@@ -91,14 +92,28 @@ public class StartupActivity extends AppCompatActivity{
                 String deviceName = device.getName();
                 String deviceHardwareAddress = device.getAddress(); // MAC address
 
-                Log.w("Discovery", "Name: " + deviceName + "  MAC: " + deviceHardwareAddress);
+                if(deviceName != null) {
+                    Log.w("Discovery", "Name: " + deviceName + "  MAC: " + deviceHardwareAddress);
 
-                if(deviceName.contains("CareMate")){
-                    Toast.makeText(StartupActivity.this, "Device FOUND using discovery!", Toast.LENGTH_LONG).show();
+                    if (deviceName.contains("CareMate")) {
+                        Toast.makeText(StartupActivity.this, "Device FOUND using discovery!", Toast.LENGTH_LONG).show();
+                        startMain();
+                    }
                 }
             }
         }
     };
+
+    protected void checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION},
+                    1);
+        }
+    }
+
 
     public void onClick(View v){
         /*
@@ -127,9 +142,7 @@ public class StartupActivity extends AppCompatActivity{
                     if(deviceName.contains("CareMate")){
                         Toast.makeText(this, "Device FOUND!", Toast.LENGTH_LONG).show();
                         deviceConnected = true;
-                        Intent mainActivity = new Intent(StartupActivity.this, MainActivity.class);
-                        //mainActivity.putExtra("key", value); //pass parameters
-                        StartupActivity.this.startActivity(mainActivity);
+                        startMain();
                     }
                     else if(!deviceConnected){
                         Toast.makeText(this, "no saved device match", Toast.LENGTH_LONG).show();
@@ -146,9 +159,12 @@ public class StartupActivity extends AppCompatActivity{
 
         }
         else{
-            Intent mainActivity = new Intent(StartupActivity.this, MainActivity.class);
-            //mainActivity.putExtra("key", value); //pass parameters
-            StartupActivity.this.startActivity(mainActivity);
+            startMain();
         }
+    }
+    public void startMain(){
+        Intent mainActivity = new Intent(StartupActivity.this, MainActivity.class);
+        //mainActivity.putExtra("key", value); //pass parameters
+        StartupActivity.this.startActivity(mainActivity);
     }
 }
