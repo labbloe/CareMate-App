@@ -16,6 +16,7 @@ import android.text.Layout;
 import android.util.Log;
 import android.view.View;
 import android.view.Menu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -38,7 +39,7 @@ public class StartupActivity extends AppCompatActivity{
 
     boolean deviceConnected = false;
     LinearLayout logoPage;
-    LinearLayout connectPage;
+    RelativeLayout connectPage;
     BluetoothAdapter bluetoothAdapter;
 
     @Override
@@ -46,7 +47,7 @@ public class StartupActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
         logoPage = (LinearLayout) findViewById(R.id.startupLogo);
-        connectPage = (LinearLayout) findViewById(R.id.findDevice);
+        connectPage = (RelativeLayout) findViewById(R.id.findDevice);
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);

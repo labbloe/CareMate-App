@@ -9,23 +9,23 @@
         android:layout_height="match_parent"
         android:visibility="visible"
         android:gravity="center">
-        <TextView
-            android:layout_height="wrap_content"
+        <ImageView
             android:layout_width="wrap_content"
-            android:textSize="50sp"
-            android:onClick="onClick"
+            android:layout_height="wrap_content"
             android:clickable="true"
-            android:fontFamily="sans-serif-condensed-light"
-            android:text="Care Mate">
-        </TextView>
+            android:onClick="onClick"
+            android:scaleX="0.7"
+            android:scaleY="0.7"
+            android:src="@drawable/logo_text"
+            />
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/findDevice"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        android:gravity="center">
+        android:layout_weight="1"
+        android:visibility="gone">
         <TextView
             android:id="@+id/connectText"
             android:layout_width="wrap_content"
@@ -35,6 +35,20 @@
             android:fontFamily="sans-serif-condensed-light"
             android:text="Connecting to your Care-Mate">
         </TextView>
-    </LinearLayout>
+
+        <ImageView
+            android:id="@+id/logoImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/connectText"
+            android:layout_alignParentBottom="true"
+            android:layout_marginTop="146dp"
+            android:layout_marginBottom="-147dp"
+            android:foregroundGravity="bottom"
+            android:scaleX="1.4"
+            android:scaleY="1.4"
+            android:src="@drawable/logo_cutoff" />
+    </RelativeLayout>
+
 
 </androidx.appcompat.widget.LinearLayoutCompat>
