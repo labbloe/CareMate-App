@@ -30,6 +30,7 @@
         android:visibility="gone">
         <ProgressBar
             android:id="@+id/progressBar"
+            android:paddingTop="200dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
         <TextView
@@ -37,14 +38,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-condensed-light"
-            android:text="Connecting to your Care-Mate"
+            android:text="@string/connect_msg"
             android:textSize="20sp"/>
 
         <ImageView
             android:id="@+id/logoImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="gone"
+            android:cropToPadding="false"
+            android:paddingTop="250dp"
+            android:visibility="visible"
             android:scaleX="1.4"
             android:scaleY="1.4"
             android:src="@drawable/logo_cutoff" />

@@ -40,6 +40,7 @@ public class StartupActivity extends AppCompatActivity{
     boolean deviceConnected = false;
     LinearLayout logoPage;
     LinearLayout connectPage;
+    TextView connectText;
     BluetoothAdapter bluetoothAdapter;
 
     @Override
@@ -48,6 +49,7 @@ public class StartupActivity extends AppCompatActivity{
         setContentView(R.layout.activity_startup);
         logoPage = (LinearLayout) findViewById(R.id.startupLogo);
         connectPage = (LinearLayout) findViewById(R.id.findDevice);
+        connectText = (TextView) findViewById(R.id.connectText);
 
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         boolean isGpsEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
@@ -97,6 +99,7 @@ public class StartupActivity extends AppCompatActivity{
 
                     if (deviceName.contains("CareMate")) {
                         Toast.makeText(StartupActivity.this, "Device FOUND using discovery!", Toast.LENGTH_LONG).show();
+                        connectText.setText("Connecting to your CareMate");
                         startMain();
                     }
                 }
@@ -142,6 +145,7 @@ public class StartupActivity extends AppCompatActivity{
                     if(deviceName.contains("CareMate")){
                         Toast.makeText(this, "Device FOUND!", Toast.LENGTH_LONG).show();
                         deviceConnected = true;
+                        connectText.setText("Connecting to your CareMate");
                         startMain();
                     }
                     else if(!deviceConnected){
@@ -163,8 +167,12 @@ public class StartupActivity extends AppCompatActivity{
         }
     }
     public void startMain(){
+        /*
+        TODO: Add general connect message to CareMate and receive any data from CareMate necessary
+         */
+
         Intent mainActivity = new Intent(StartupActivity.this, MainActivity.class);
-        //mainActivity.putExtra("key", value); //pass parameters
+        //mainActivity.putExtra("key", value); //pass parameters from pulled CareMate data
         StartupActivity.this.startActivity(mainActivity);
     }
 }
