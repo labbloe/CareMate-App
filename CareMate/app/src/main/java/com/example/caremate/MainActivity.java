@@ -1,8 +1,14 @@
 package com.example.caremate;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.os.Bundle;
+import android.os.ParcelUuid;
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.navigation.NavigationView;
@@ -16,10 +22,21 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.caremate.databinding.ActivityMainBinding;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.UUID;
+
+import static android.content.ContentValues.TAG;
+
 public class MainActivity extends AppCompatActivity {
 
     private AppBarConfiguration mAppBarConfiguration;
     private ActivityMainBinding binding;
+
+    BluetoothDevice CareMate;
+    BluetoothAdapter mBluetoothAdapter;
+    ConnectThread conn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "This action is currently unavailable", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                conn.sendData("test send");
             }
         });
         DrawerLayout drawer = binding.drawerLayout;
@@ -47,6 +65,15 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+
+
+        //Star Bluetooth connection
+        CareMate = getIntent().getExtras().getParcelable("CareMate");
+        Log.w("Bluetooth", CareMate.getAddress());
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        conn = new ConnectThread(CareMate,true);
+        conn.start();
+
     }
 
     @Override
@@ -62,4 +89,154 @@ public class MainActivity extends AppCompatActivity {
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
     }
+
+    /*
+        Bluetooth Setup
+     */
+
+    public class ConnectThread extends Thread {
+        BluetoothDevice cDevice;
+        BluetoothSocket socket;
+        ConnectedThread ct;
+
+        ConnectThread(BluetoothDevice device, boolean insecureConnection) {
+            cDevice = device;
+            //ParcelUuid list[] = device.getUuids();
+            //Log.d("UUID", list[0].toString());
+            UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
+            try {
+                if (insecureConnection) {
+                    socket = device.createInsecureRfcommSocketToServiceRecord(uuid);
+                } else {
+                    socket = device.createRfcommSocketToServiceRecord(uuid);
+                }
+            } catch (IOException e) {
+                e.getMessage();
+            }
+        }
+
+        public void run() {
+            mBluetoothAdapter.cancelDiscovery();
+
+            try {
+                Log.d("BT", "Socket ready to connect");
+                socket.connect();
+                Log.d("BT", "Socket connected");
+                // out = socket.getOutputStream();
+                // input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+
+
+            } catch (final IOException e) {
+                Log.d("ERROR","Msg: ");
+                e.getMessage();
+            }
+            catch(Exception e){
+                Log.d("ERROR","Full Msg: ");
+                e.getMessage();
+            }
+
+            ct = new ConnectedThread(socket);
+
+            //ct.write("Q-smart".getBytes());
+            /*try {
+                socket.close();
+            } catch (final IOException closeException) {
+                closeException.getMessage();
+            }*/
+        }
+
+        private void sendData(String message) {
+            Log.d(TAG, message);
+            if (socket != null) {
+                ct.write(message.getBytes());
+            } else {
+                Toast.makeText(MainActivity.this,"Please connect to bluetooth first", Toast.LENGTH_LONG).show();
+            }
+        }
+
+        public void cancel() {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private class ConnectedThread extends Thread {
+        private final BluetoothSocket mmSocket;
+        private final InputStream mmInStream;
+        private final OutputStream mmOutStream;
+        private byte[] mmBuffer; // mmBuffer store for the stream
+
+        public ConnectedThread(BluetoothSocket socket) {
+            mmSocket = socket;
+            InputStream tmpIn = null;
+            OutputStream tmpOut = null;
+
+            // Get the input and output streams; using temp objects because
+            // member streams are final.
+            try {
+                tmpIn = socket.getInputStream();
+            } catch (IOException e) {
+                Log.e(TAG, "Error occurred when creating input stream", e);
+            }
+            try {
+                tmpOut = socket.getOutputStream();
+            } catch (IOException e) {
+                Log.e(TAG, "Error occurred when creating output stream", e);
+            }
+
+            mmInStream = tmpIn;
+            mmOutStream = tmpOut;
+        }
+
+        public void run() {
+            mmBuffer = new byte[1024];
+            int numBytes; // bytes returned from read()
+
+            // Keep listening to the InputStream until an exception occurs.
+            while (true) {
+                try {
+                    // Read from the InputStream.
+                    numBytes = mmInStream.read(mmBuffer);
+                    // Send the obtained bytes to the UI activity.
+               /* Message readMsg = mHandler.obtainMessage(
+                        MessageConstants.MESSAGE_READ, numBytes, -1,
+                        mmBuffer);
+                readMsg.sendToTarget();*/
+                } catch (IOException e) {
+                    Log.d(TAG, "Input stream was disconnected", e);
+                    break;
+                }
+            }
+        }
+
+        // Call this from the main activity to send data to the remote device.
+        public void write(byte[] bytes) {
+            try {
+                mmOutStream.write(bytes);
+
+                // Share the sent message with the UI activity.
+           /* Message writtenMsg = mHandler.obtainMessage(
+                    MessageConstants.MESSAGE_WRITE, -1, -1, mmBuffer);
+            writtenMsg.sendToTarget();*/
+            } catch (IOException e) {
+                Log.e(TAG, "Error occurred when sending data", e);
+
+                // Send a failure message back to the activity.
+           /* Message writeErrorMsg =
+                    mHandler.obtainMessage(MessageConstants.MESSAGE_TOAST);
+            Bundle bundle = new Bundle();
+            bundle.putString("toast",
+                    "Couldn't send data to the other device");
+            writeErrorMsg.setData(bundle);
+            mHandler.sendMessage(writeErrorMsg);*/
+            }
+        }
+
+
+    }
 }
+
+

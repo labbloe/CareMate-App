@@ -43,6 +43,9 @@ public class StartupActivity extends AppCompatActivity{
     TextView connectText;
     BluetoothAdapter bluetoothAdapter;
 
+    //Current CareMate device. Store device when found using discovery.
+    BluetoothDevice CareMate;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,8 +102,10 @@ public class StartupActivity extends AppCompatActivity{
 
                     if (deviceName.contains("CareMate")) {
                         Toast.makeText(StartupActivity.this, "Device FOUND using discovery!", Toast.LENGTH_LONG).show();
-                        connectText.setText("Connecting to your CareMate");
-                        startMain();
+                        connectText.setText("Connecting...");
+                        if(bluetoothAdapter.isDiscovering())
+                            bluetoothAdapter.cancelDiscovery();
+                        startMain(device);
                     }
                 }
             }
@@ -145,8 +150,10 @@ public class StartupActivity extends AppCompatActivity{
                     if(deviceName.contains("CareMate")){
                         Toast.makeText(this, "Device FOUND!", Toast.LENGTH_LONG).show();
                         deviceConnected = true;
-                        connectText.setText("Connecting to your CareMate");
-                        startMain();
+                        connectText.setText("Connecting...");
+                        if(bluetoothAdapter.isDiscovering())
+                            bluetoothAdapter.cancelDiscovery();
+                        startMain(device);
                     }
                     else if(!deviceConnected){
                         Toast.makeText(this, "no saved device match", Toast.LENGTH_LONG).show();
@@ -163,16 +170,19 @@ public class StartupActivity extends AppCompatActivity{
 
         }
         else{
-            startMain();
+
         }
     }
-    public void startMain(){
+    public void startMain(BluetoothDevice device){
         /*
         TODO: Add general connect message to CareMate and receive any data from CareMate necessary
          */
 
-        Intent mainActivity = new Intent(StartupActivity.this, MainActivity.class);
-        //mainActivity.putExtra("key", value); //pass parameters from pulled CareMate data
+        Intent mainActivity = new Intent(this, MainActivity.class);
+
+        //Pass parameters to main activity
+        mainActivity.putExtra("CareMate", device); //Pass CareMate BT Device
+
         StartupActivity.this.startActivity(mainActivity);
     }
 }
