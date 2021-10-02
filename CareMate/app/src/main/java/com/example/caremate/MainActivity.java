@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     // Read from the InputStream.
                     numBytes = mmInStream.read(mmBuffer);
+                    Log.w("READ", "message received");
                     // Send the obtained bytes to the UI activity.
                /* Message readMsg = mHandler.obtainMessage(
                         MessageConstants.MESSAGE_READ, numBytes, -1,
