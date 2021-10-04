@@ -25,12 +25,12 @@
             android:gravity="left"
             android:paddingTop="30dp"
             android:paddingLeft="10dp"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:text="Compartment Selection"/>
         <Spinner
             android:id="@+id/compartment_spinner"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"/>
         <TextView
@@ -39,14 +39,68 @@
             android:gravity="left"
             android:paddingTop="10dp"
             android:paddingLeft="10dp"
-            android:textSize="15dp"
+            android:textSize="20dp"
             android:text="Dispense Day"/>
         <Spinner
             android:id="@+id/day_selector"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="40dp"
             android:paddingLeft="10dp"
             android:paddingTop="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="20dp"
+            android:text="Dispense Time"/>
+        <EditText
+            android:id="@+id/dispenseTime"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="20dp"
+            android:text="Enable Alarm at Dispense Time"/>
+        <CheckBox
+            android:id="@+id/dispenseAlarm"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"
+            android:gravity="left"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="20dp"
+            android:text="Notes"/>
+        <EditText
+            android:id="@+id/dispenseNotes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:isScrollContainer="true"
+            android:textSize="15dp"/>
+        <Button
+            android:id="@+id/dispenseSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="saveClick"
+            android:textSize="15dp"
+            android:text="Save"/>
 
     </LinearLayout>
 

@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         binding.appBarMain.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "This action is currently unavailable", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Sent test command to CareMate", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
                 conn.sendData("test send");
             }
@@ -67,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navigationView, navController);
 
 
-        //Star Bluetooth connection
+        //Start Bluetooth connection
         CareMate = getIntent().getExtras().getParcelable("CareMate");
         Log.w("Bluetooth", CareMate.getAddress());
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -103,6 +103,11 @@ public class MainActivity extends AppCompatActivity {
             cDevice = device;
             //ParcelUuid list[] = device.getUuids();
             //Log.d("UUID", list[0].toString());
+            /*
+            NOTE: This is the default serial BT UUID that many devices default to
+                  The ESP32 library we are using does not allow for custom UUID allocation.
+                  However, it does default to the address below.
+             */
             UUID uuid = UUID.fromString("00001101-0000-1000-8000-00805f9b34fb");
             try {
                 if (insecureConnection) {
