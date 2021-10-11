@@ -27,7 +27,7 @@ public class NotificationFragment extends Fragment {
 
         binding = FragmentNotificationBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
-        
+
         return root;
     }
 
