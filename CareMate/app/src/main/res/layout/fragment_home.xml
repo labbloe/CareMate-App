@@ -22,7 +22,11 @@
             android:layout_gravity="center"
             android:paddingTop="20dp"
             android:textSize="20dp"
-            android:text="Updates"/>
+            android:text="Dispense Schedule"/>
+        <ListView
+            android:id="@+id/scheduleList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 
