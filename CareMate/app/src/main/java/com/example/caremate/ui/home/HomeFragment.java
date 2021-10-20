@@ -41,13 +41,28 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //Dispense schedule and check in question list arrays
         ArrayList<String> dispenseArray = new ArrayList<>();
-        dispenseArray.add("test");
-        dispenseArray.add("test2");
+        ArrayList<String> questionArray = new ArrayList<>();
 
+        dispenseArray.add("Compartment 1: 9:30 AM");
+        dispenseArray.add("Compartment 2: 7:30 PM");
+        dispenseArray.add("Compartment 3: 10:00 AM");
+        dispenseArray.add("Compartment 4: 8:30 PM");
+
+        questionArray.add("Note 1: 'Do you need me to contact you this morning?'");
+        questionArray.add("Note 2: 'Rate your back pain between 1 and 10 this morning");
+        questionArray.add("Note 3: 'Did you take your medication this morning?'");
+
+        //Dispense schedule list
         ArrayAdapter dispenseList = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, dispenseArray);
         ListView dispenseListView = (ListView) getView().findViewById(R.id.scheduleList);
         dispenseListView.setAdapter(dispenseList);
+
+        //Check-in Question list
+        ArrayAdapter questionList = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, questionArray);
+        ListView questionListView = (ListView) getView().findViewById(R.id.questionList);
+        questionListView.setAdapter(questionList);
 
     }
 
