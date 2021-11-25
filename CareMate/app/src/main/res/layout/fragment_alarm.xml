@@ -9,15 +9,52 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:paddingTop="20dp">
         <TextView
             android:id="@+id/home_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_gravity="center"
             android:textSize="30dp"
             android:text="Alarm Schedule"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="20dp"
+            android:text="Day"/>
+        <Spinner
+            android:id="@+id/weekday_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="20dp"
+            android:text="Alarm Time"/>
+        <EditText
+            android:id="@+id/alarmTime"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="15dp"/>
+        <Button
+            android:id="@+id/dispenseSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="saveClick"
+            android:textSize="15dp"
+            android:text="Save"/>
     </LinearLayout>
 
 

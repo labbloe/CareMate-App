@@ -3,11 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <!-- Startup Test Page
     <LinearLayout
         android:id="@+id/startupLogo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_weight="1"
+        android:layout_gravity="center"
         android:gravity="center">
         <ImageView
             android:layout_width="wrap_content"
@@ -19,7 +23,7 @@
             android:src="@drawable/cm_logo"
             />
     </LinearLayout>
-
+                        -->
     <LinearLayout
         android:id="@+id/findDevice"
         android:layout_width="match_parent"
@@ -27,11 +31,16 @@
         android:gravity="center"
         android:orientation="vertical"
         android:layout_weight="1"
-        android:visibility="gone">
+        android:visibility="visible">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:src="@drawable/cm_logo"/>
         <ProgressBar
             android:id="@+id/progressBar"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"/>
         <TextView
             android:id="@+id/connectText"
             android:layout_width="wrap_content"

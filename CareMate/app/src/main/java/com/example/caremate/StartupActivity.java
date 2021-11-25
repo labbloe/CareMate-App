@@ -50,7 +50,7 @@ public class StartupActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_startup);
-        logoPage = (LinearLayout) findViewById(R.id.startupLogo);
+        //logoPage = (LinearLayout) findViewById(R.id.startupLogo);
         connectPage = (LinearLayout) findViewById(R.id.findDevice);
         connectText = (TextView) findViewById(R.id.connectText);
 
@@ -79,6 +79,8 @@ public class StartupActivity extends AppCompatActivity{
         }
         IntentFilter filter = new IntentFilter(BluetoothDevice.ACTION_FOUND);
         registerReceiver(receiver, filter);
+
+        startView();
 
 
     }
@@ -123,7 +125,7 @@ public class StartupActivity extends AppCompatActivity{
     }
 
 
-    public void onClick(View v){
+    public void startView(){
         /*
         Bluetooth devices will be scanned for and detected on the connect page.
         The CareMate device will advertise the same general name, and likewise
@@ -135,7 +137,7 @@ public class StartupActivity extends AppCompatActivity{
         be disconnected.
          */
         if(deviceConnected == false){
-            logoPage.setVisibility(View.GONE);
+            //logoPage.setVisibility(View.GONE);
             connectPage.setVisibility(View.VISIBLE);
 
             //First, check for paired devices before re-scanning to see if CareMate is already

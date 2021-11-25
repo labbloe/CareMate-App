@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,12 @@ public class AlarmFragment extends Fragment {
 
         binding = FragmentAlarmBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        Spinner daySelector_spinner = (Spinner) getView().findViewById(R.id.weekday_selector);
+        ArrayAdapter<CharSequence> daySelectorAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.day_selection, android.R.layout.simple_spinner_item);
+        daySelectorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        daySelector_spinner.setAdapter(daySelectorAdapter);
 
         return root;
     }
