@@ -1,10 +1,12 @@
 package com.example.caremate.ui.medication;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -22,6 +24,9 @@ public class MedicationFragment extends Fragment {
 
     private MedicationViewModel medicationViewModel;
     private FragmentMedicationBinding binding;
+    private MainActivity main;
+    public MainActivity.ConnectThread conn;
+    private Button saveButton;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -30,6 +35,7 @@ public class MedicationFragment extends Fragment {
 
         binding = FragmentMedicationBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+        main = (MainActivity) getActivity();
 
         return root;
     }
@@ -49,11 +55,27 @@ public class MedicationFragment extends Fragment {
                 R.array.day_selection, android.R.layout.simple_spinner_item);
         daySelectorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         daySelector_spinner.setAdapter(daySelectorAdapter);
+
+        conn = MainActivity.conn;
+
+        saveButton = (Button) getView().findViewById(R.id.dispenseSave);
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view){
+                conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");
+            }
+        });
+
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    public void saveClick(View v){
+        conn.sendData("Medication Save Button Pressed");
+        Log.w("BUTTON", "Medication Save Button Pressed");
     }
 }

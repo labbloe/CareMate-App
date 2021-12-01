@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     BluetoothDevice CareMate;
     BluetoothAdapter mBluetoothAdapter;
-    ConnectThread conn;
+    public static ConnectThread conn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +88,26 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment_content_main);
         return NavigationUI.navigateUp(navController, mAppBarConfiguration)
                 || super.onSupportNavigateUp();
+    }
+
+    public void saveSettings(View v){
+        conn.sendData("{wifi_ssid, network_name, wifi_pass, network_password}");
+        Log.w("click", "WiFi Changes Saved");
+    }
+
+    public void saveMedication(View v){
+        conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");
+        Log.w("click", "Medication save Button Pressed");
+    }
+
+    public void saveAlarm(View v){
+        conn.sendData("{alarm1,monday-1159,alarm2,tuesday-0800,alarm3,wednesday-0830}");
+        Log.w("click", "Alarm Save Button Pressed");
+    }
+
+    public void saveNotification(View v){
+        conn.sendData("{email,labbloe@gmail.com,phone,3147661588}");
+        Log.w("click", "Notification Save Button Pressed");
     }
 
     /*
@@ -150,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             }*/
         }
 
-        private void sendData(String message) {
+        public void sendData(String message) {
             Log.d(TAG, message);
             if (socket != null) {
                 ct.write(message.getBytes());

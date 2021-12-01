@@ -84,7 +84,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:onClick="saveClick"
+            android:clickable="true"
+            android:onClick="saveNotification"
             android:textSize="15dp"
             android:text="Save"/>
     </LinearLayout>
