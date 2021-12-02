@@ -28,6 +28,7 @@ public class MedicationFragment extends Fragment {
     public MainActivity.ConnectThread conn;
     private Button saveButton;
 
+
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         medicationViewModel =
@@ -56,13 +57,22 @@ public class MedicationFragment extends Fragment {
         daySelectorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         daySelector_spinner.setAdapter(daySelectorAdapter);
 
+        TextView dispenseTime = (TextView) getView().findViewById(R.id.dispenseTime);
+
+
         conn = MainActivity.conn;
 
         saveButton = (Button) getView().findViewById(R.id.dispenseSave);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
-                conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");
+                String compartment = pillCompartment_spinner.getSelectedItem().toString();
+                String day = daySelector_spinner.getSelectedItem().toString();
+                String time = dispenseTime.getText().toString();
+                String msg = "{type:medication,bin:" + compartment + ",day:" + day + ",time:" + time + "}";
+                conn.sendData(msg);
+                Log.w("click",msg);
+                //conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");
             }
         });
 
