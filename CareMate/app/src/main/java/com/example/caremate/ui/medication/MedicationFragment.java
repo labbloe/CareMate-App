@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -46,6 +47,7 @@ public class MedicationFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences((MainActivity) getContext());
 
         Spinner pillCompartment_spinner = (Spinner) getView().findViewById(R.id.compartment_spinner);
         ArrayAdapter<CharSequence> compartmentAdapter = ArrayAdapter.createFromResource(getContext(),
@@ -64,6 +66,33 @@ public class MedicationFragment extends Fragment {
 
 
         conn = MainActivity.conn;
+        //dispenseTime.setText(preferences.getString("medication" + pillCompartment_spinner.getSelectedItem(), ""));
+        //dispenseNotes.setText(preferences.getString("medication" + pillCompartment_spinner.getSelectedItem(), ""));
+        pillCompartment_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String data = preferences.getString("medication" + pillCompartment_spinner.getSelectedItem().toString(), "");
+                if(data.contains(":")) {
+                    String[] dataTmp = data.split(":");
+                    String[] dataTmp2 = dataTmp[1].split("-");
+                    Log.w("DAY SELECTOR=============",dataTmp[0]);
+                    for(int i=0; i<7; i++){
+                        if(daySelector_spinner.getItemAtPosition(i).toString().contains(dataTmp[0]))
+                            daySelector_spinner.setSelection(i);
+                    }
+                    if(dataTmp2[0] != null)
+                        dispenseTime.setText(dataTmp2[0]);
+                    if(dataTmp2[1] != null)
+                        dispenseNotes.setText(dataTmp2[1]);
+                }
+                else{
+                    dispenseTime.setText("");
+                    dispenseNotes.setText("");
+                }
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent){};
+        });
 
         saveButton = (Button) getView().findViewById(R.id.dispenseSave);
         saveButton.setOnClickListener(new View.OnClickListener() {
@@ -74,15 +103,37 @@ public class MedicationFragment extends Fragment {
                 String time = dispenseTime.getText().toString();
                 String notes = dispenseNotes.getText().toString();
                 String msg = "{\"type\":\"medication\",\"bin\":" + compartment + ",\"day\":\"" + day + "\",\"time\":" + time + "}";
-                conn.sendData(msg);
+                //conn.sendData(msg);
                 Log.w("click",msg);
 
                 //Store data internally using Shared Preferences
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences((MainActivity) getContext());
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString("medication" + compartment, day + "  " + time + " - " + notes);
+                editor.putString("medication" + compartment, day + ":" + time + "-" + notes);
                 editor.apply();
                 editor.commit();
+
+                //Send all data
+                String sendData = "{\"type\":\"medication\",\"list\":[";
+                String[] dataTmp = {"",""};
+                String[] dataTmp2 = {"", ""};
+                for(int i=0; i<7; i++){
+                    String position = Integer.toString(i+1);
+                    String data = preferences.getString("medication" + position, "");
+                    if(data.contains(":")) {
+                        dataTmp = data.split(":");
+                        dataTmp2 = dataTmp[1].split("-");
+                    }
+                    else{
+                        dataTmp[0] = "";
+                        dataTmp2[0] = "";
+                    }
+                    sendData += "{\"bin\":" + position + ",\"day\":\"" + dataTmp[0] + "\",\"time\":" + dataTmp2[0] + "}";
+                    if(i != 6)
+                        sendData += ",";
+                }
+                sendData += "]}";
+                conn.sendData(sendData);
+                Log.w("bluetooth",sendData);
             }
         });
 

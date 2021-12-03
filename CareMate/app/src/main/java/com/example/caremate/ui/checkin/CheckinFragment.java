@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -46,6 +47,7 @@ public class CheckinFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences((MainActivity) getContext());
 
         Spinner questionSelector_spinner = (Spinner) getView().findViewById(R.id.questionSelector);
         ArrayAdapter<CharSequence> questionSelectorAdapter = ArrayAdapter.createFromResource(getContext(),
@@ -54,6 +56,15 @@ public class CheckinFragment extends Fragment {
         questionSelector_spinner.setAdapter(questionSelectorAdapter);
 
         TextView question = (TextView) getView().findViewById(R.id.questionText);
+        question.setText(preferences.getString("question" + questionSelector_spinner.getSelectedItem(), ""));
+        questionSelector_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                question.setText(preferences.getString("question" + questionSelector_spinner.getSelectedItem(), ""));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent){};
+        });
 
 
         conn = MainActivity.conn;
@@ -62,20 +73,32 @@ public class CheckinFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
+
                 String questionNumber = questionSelector_spinner.getSelectedItem().toString();
                 String questionText = question.getText().toString();
                 questionText.replaceAll("\\s+","*");
-                String msg = "{\"type\":\"question\",\"question\":\"" + questionText + "\",\"number\":" + questionNumber + "}";
-                conn.sendData(msg);
+                String msg = "\"question\":\"" + questionText + "\",\"number\":" + questionNumber;
+                //conn.sendData(msg);
                 Log.w("click",msg);
-                //conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");
+
 
                 //Store data internally using Shared Preferences
-                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences((MainActivity) getContext());
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("question" + questionNumber, questionText);
                 editor.apply();
                 editor.commit();
+
+                //Send all questions
+                String sendMsg = "{\"type\":\"question\",";
+                for(int i=0; i<7; i++) {
+                    String position = "question" + Integer.toString(i+1);
+                    sendMsg += "\"" + position + "\":\"" + preferences.getString(position,"") + "\"";
+                    if(i != 6)
+                        sendMsg +=",";
+                }
+                sendMsg += "}";
+                conn.sendData(sendMsg);
+                Log.w("bluetooth",sendMsg);
             }
         });
     }
