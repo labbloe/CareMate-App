@@ -64,7 +64,7 @@ public class AlarmFragment extends Fragment {
             public void onClick(View view){
                 String day = daySelector_spinner.getSelectedItem().toString();
                 String time = timeText.getText().toString();
-                String msg = "{type:alarm,day:" + day + ",time:" + time + "}";
+                String msg = "{\"type\":\"alarm\",\"day\":\"" + day + "\",\"time\":" + time + "}";
                 conn.sendData(msg);
                 Log.w("click",msg);
                 //conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");

@@ -1,6 +1,8 @@
 package com.example.caremate.ui.checkin;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,10 +64,18 @@ public class CheckinFragment extends Fragment {
             public void onClick(View view){
                 String questionNumber = questionSelector_spinner.getSelectedItem().toString();
                 String questionText = question.getText().toString();
-                String msg = "{type:question,number:" + questionNumber + ",text:" + questionText + "}";
+                questionText.replaceAll("\\s+","*");
+                String msg = "{\"type\":\"question\",\"question\":\"" + questionText + "\",\"number\":" + questionNumber + "}";
                 conn.sendData(msg);
                 Log.w("click",msg);
                 //conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");
+
+                //Store data internally using Shared Preferences
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences((MainActivity) getContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("question" + questionNumber, questionText);
+                editor.apply();
+                editor.commit();
             }
         });
     }

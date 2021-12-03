@@ -50,8 +50,10 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 String wifiSSID = ssid.getText().toString();
+                String tmp;
+                wifiSSID.replaceAll("\\s+","*");
                 String wifiPASS = pass.getText().toString();
-                String msg = "{type:wifi,SSID:" + wifiSSID + ",pass:" + wifiPASS + "}";
+                String msg = "{\"type\":\"wifi\",\"SSID\":\"" + wifiSSID + "\",\"pass\":\"" + wifiPASS + "\"}";
                 conn.sendData(msg);
                 Log.w("click", msg);
                 //conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");

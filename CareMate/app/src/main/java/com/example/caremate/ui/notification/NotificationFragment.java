@@ -52,7 +52,7 @@ public class NotificationFragment extends Fragment {
             public void onClick(View view){
                 String emailSend = email.getText().toString();
                 String phoneSend = phone.getText().toString();
-                String msg = "{type:notification,email:" + emailSend + ",phone:" + phoneSend + "}";
+                String msg = "{\"type\":\"notification\",\"email\":\"" + emailSend + "\",\"phone\":\"" + phoneSend + "\"}";
                 conn.sendData(msg);
                 Log.w("click",msg);
                 //conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");

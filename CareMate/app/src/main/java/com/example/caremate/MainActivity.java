@@ -90,25 +90,7 @@ public class MainActivity extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    public void saveSettings(View v){
-        conn.sendData("{wifi_ssid, network_name, wifi_pass, network_password}");
-        Log.w("click", "WiFi Changes Saved");
-    }
 
-    public void saveMedication(View v){
-        conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");
-        Log.w("click", "Medication save Button Pressed");
-    }
-
-    public void saveAlarm(View v){
-        conn.sendData("{alarm1,monday-1159,alarm2,tuesday-0800,alarm3,wednesday-0830}");
-        Log.w("click", "Alarm Save Button Pressed");
-    }
-
-    public void saveNotification(View v){
-        conn.sendData("{email,labbloe@gmail.com,phone,3147661588}");
-        Log.w("click", "Notification Save Button Pressed");
-    }
 
     /*
         Bluetooth Setup

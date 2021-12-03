@@ -1,6 +1,8 @@
 package com.example.caremate.ui.home;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,18 +43,29 @@ public class HomeFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //Get shared preferences to gather data
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+
+
         //Dispense schedule and check in question list arrays
         ArrayList<String> dispenseArray = new ArrayList<>();
         ArrayList<String> questionArray = new ArrayList<>();
 
-        dispenseArray.add("Compartment 1: 9:30 AM");
-        dispenseArray.add("Compartment 2: 7:30 PM");
-        dispenseArray.add("Compartment 3: 10:00 AM");
-        dispenseArray.add("Compartment 4: 8:30 PM");
+        dispenseArray.add(sharedPreferences.getString("medication1",""));
+        dispenseArray.add(sharedPreferences.getString("medication2",""));
+        dispenseArray.add(sharedPreferences.getString("medication3",""));
+        dispenseArray.add(sharedPreferences.getString("medication4",""));
+        dispenseArray.add(sharedPreferences.getString("medication5",""));
+        dispenseArray.add(sharedPreferences.getString("medication6",""));
+        dispenseArray.add(sharedPreferences.getString("medication7",""));
 
-        questionArray.add("Note 1: 'Do you need me to contact you this morning?'");
-        questionArray.add("Note 2: 'Rate your back pain between 1 and 10 this morning");
-        questionArray.add("Note 3: 'Did you take your medication this morning?'");
+        questionArray.add(sharedPreferences.getString("question1",""));
+        questionArray.add(sharedPreferences.getString("question2",""));
+        questionArray.add(sharedPreferences.getString("question3",""));
+        questionArray.add(sharedPreferences.getString("question4",""));
+        questionArray.add(sharedPreferences.getString("question5",""));
+        questionArray.add(sharedPreferences.getString("question6",""));
+        questionArray.add(sharedPreferences.getString("question7",""));
 
         //Dispense schedule list
         ArrayAdapter dispenseList = new ArrayAdapter(this.getContext(), android.R.layout.simple_list_item_1, dispenseArray);

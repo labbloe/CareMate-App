@@ -1,6 +1,8 @@
 package com.example.caremate.ui.medication;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +60,7 @@ public class MedicationFragment extends Fragment {
         daySelector_spinner.setAdapter(daySelectorAdapter);
 
         TextView dispenseTime = (TextView) getView().findViewById(R.id.dispenseTime);
+        TextView dispenseNotes = (TextView) getView().findViewById(R.id.dispenseNotes);
 
 
         conn = MainActivity.conn;
@@ -69,10 +72,17 @@ public class MedicationFragment extends Fragment {
                 String compartment = pillCompartment_spinner.getSelectedItem().toString();
                 String day = daySelector_spinner.getSelectedItem().toString();
                 String time = dispenseTime.getText().toString();
-                String msg = "{type:medication,bin:" + compartment + ",day:" + day + ",time:" + time + "}";
+                String notes = dispenseNotes.getText().toString();
+                String msg = "{\"type\":\"medication\",\"bin\":" + compartment + ",\"day\":\"" + day + "\",\"time\":" + time + "}";
                 conn.sendData(msg);
                 Log.w("click",msg);
-                //conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");
+
+                //Store data internally using Shared Preferences
+                SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences((MainActivity) getContext());
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("medication" + compartment, day + "  " + time + " - " + notes);
+                editor.apply();
+                editor.commit();
             }
         });
 
