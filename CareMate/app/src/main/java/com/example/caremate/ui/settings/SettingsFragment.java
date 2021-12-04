@@ -13,6 +13,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import java.util.Calendar;
+import java.util.Date;
 
 import com.example.caremate.MainActivity;
 import com.example.caremate.R;
@@ -49,11 +51,14 @@ public class SettingsFragment extends Fragment {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                //Get Current Time
+                Date currentTime = Calendar.getInstance().getTime();
+
                 String wifiSSID = ssid.getText().toString();
-                String tmp;
                 wifiSSID.replaceAll("\\s+","*");
                 String wifiPASS = pass.getText().toString();
-                String msg = "{\"type\":\"wifi\",\"SSID\":\"" + wifiSSID + "\",\"pass\":\"" + wifiPASS + "\"}";
+                String msg = "{\"type\":\"wifi\",\"SSID\":\"" + wifiSSID + "\",\"pass\":\"" + wifiPASS + "\",\"time\"";
+                msg += Integer.toString(currentTime.getHours()) + Integer.toString(currentTime.getMinutes()) + "}";
                 conn.sendData(msg);
                 Log.w("click", msg);
                 //conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");
