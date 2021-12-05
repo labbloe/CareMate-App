@@ -89,14 +89,17 @@ public class CheckinFragment extends Fragment {
                 editor.commit();
 
                 //Send all questions
-                String sendMsg = "{\"type\":\"question\",";
+                String sendMsg = "{\"type\":\"question\",\"list\":[";
                 for(int i=0; i<7; i++) {
                     String position = "question" + Integer.toString(i+1);
-                    sendMsg += "\"" + position + "\":\"" + preferences.getString(position,"") + "\"";
+                    String text = preferences.getString(position,"");
+                    if(text.isEmpty())
+                        text = " ";
+                    sendMsg += "\"" + text + "\"";
                     if(i != 6)
                         sendMsg +=",";
                 }
-                sendMsg += "}";
+                sendMsg += "]}";
                 conn.sendData(sendMsg);
                 Log.w("bluetooth",sendMsg);
             }

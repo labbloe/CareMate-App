@@ -1,10 +1,13 @@
 package com.example.caremate.ui.alarm;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -22,6 +25,8 @@ import com.example.caremate.R;
 import com.example.caremate.databinding.FragmentAlarmBinding;
 
 import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
 
 public class AlarmFragment extends Fragment {
 
@@ -47,6 +52,13 @@ public class AlarmFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences((MainActivity) getContext());
+
+        Spinner alarmSelector_spinner = (Spinner) getView().findViewById(R.id.alarm_selector);
+        ArrayAdapter<CharSequence> alarmSelectorAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.pill_compartments, android.R.layout.simple_spinner_item);
+        alarmSelectorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        alarmSelector_spinner.setAdapter(alarmSelectorAdapter);
 
         Spinner daySelector_spinner = (Spinner) getView().findViewById(R.id.weekday_selector);
         ArrayAdapter<CharSequence> daySelectorAdapter = ArrayAdapter.createFromResource(getContext(),
@@ -58,16 +70,59 @@ public class AlarmFragment extends Fragment {
 
         conn = MainActivity.conn;
 
+        alarmSelector_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String alarmInfo = preferences.getString("alarm" + alarmSelector_spinner.getSelectedItem().toString(),"");
+                if(alarmInfo.contains(":")) {
+                    String[] data = {"", ""};
+                    data = alarmInfo.split(":");
+                    for (int i = 0; i < 7; i++) {
+                        if (daySelector_spinner.getItemAtPosition(i).toString().contains(data[0]))
+                            daySelector_spinner.setSelection(i);
+                    }
+                    if (data[1] != null)
+                        timeText.setText(data[1]);
+                }
+                else{
+                    timeText.setText("");
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         saveButton = (Button) getView().findViewById(R.id.alarmSave);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view){
+                String alarmNum = alarmSelector_spinner.getSelectedItem().toString();
                 String day = daySelector_spinner.getSelectedItem().toString();
                 String time = timeText.getText().toString();
-                String msg = "{\"type\":\"alarm\",\"day\":\"" + day + "\",\"time\":" + time + "}";
+
+                //Store data internally using Shared Preferences
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString("alarm" + alarmNum, day + ":" + time);
+                editor.apply();
+                editor.commit();
+
+                String msg = "{\"type\":\"alarm\",\"list\":[";
+                //String msg = "{\"type\":\"alarm\",\"day\":\"" + day + "\",\"time\":" + time + "}";
+                String[] data = {"",""};
+                for(int i=1; i<8; i++){
+                    data = preferences.getString("alarm" + i,"").toString().split(":");
+                    if(preferences.getString("alarm" + i,"").toString().contains(":"))
+                        msg += "{\"day\":\"" + data[0] + "\",\"time\":" + data[1] + "\"}";
+                    else
+                        msg += "{\"day\":\" \",\"time\": }";
+                }
+                msg += "]}";
+
                 conn.sendData(msg);
                 Log.w("click",msg);
-                //conn.sendData("{bin1,monday-1159,bin2,tuesday-0800,wednesday-0830}");
             }
         });
 

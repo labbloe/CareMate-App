@@ -25,6 +25,20 @@
             android:paddingTop="10dp"
             android:paddingLeft="10dp"
             android:textSize="20dp"
+            android:text="Alarm"/>
+        <Spinner
+            android:id="@+id/alarm_selector"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="10dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="20dp"
             android:text="Day"/>
         <Spinner
             android:id="@+id/weekday_selector"
