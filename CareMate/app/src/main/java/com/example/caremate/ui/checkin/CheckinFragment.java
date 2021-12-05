@@ -55,12 +55,16 @@ public class CheckinFragment extends Fragment {
         questionSelectorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         questionSelector_spinner.setAdapter(questionSelectorAdapter);
 
+        TextView displayTime = (TextView) getView().findViewById(R.id.displayTime);
+        displayTime.setText(preferences.getString("questionTime",""));
+
         TextView question = (TextView) getView().findViewById(R.id.questionText);
         question.setText(preferences.getString("question" + questionSelector_spinner.getSelectedItem(), ""));
         questionSelector_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 question.setText(preferences.getString("question" + questionSelector_spinner.getSelectedItem(), ""));
+
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent){};
@@ -76,6 +80,7 @@ public class CheckinFragment extends Fragment {
 
                 String questionNumber = questionSelector_spinner.getSelectedItem().toString();
                 String questionText = question.getText().toString();
+                String time = displayTime.getText().toString();
                 questionText.replaceAll("\\s+","*");
                 String msg = "\"question\":\"" + questionText + "\",\"number\":" + questionNumber;
                 //conn.sendData(msg);
@@ -85,11 +90,12 @@ public class CheckinFragment extends Fragment {
                 //Store data internally using Shared Preferences
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("question" + questionNumber, questionText);
+                editor.putString("questionTime",time);
                 editor.apply();
                 editor.commit();
 
                 //Send all questions
-                String sendMsg = "{\"type\":\"question\",\"list\":[";
+                String sendMsg = "{\"type\":\"question\",\"time\":" + time + "\"list\":[";
                 for(int i=0; i<7; i++) {
                     String position = "question" + Integer.toString(i+1);
                     String text = preferences.getString(position,"");

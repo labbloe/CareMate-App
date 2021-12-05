@@ -26,6 +26,21 @@
             android:paddingTop="10dp"
             android:paddingLeft="10dp"
             android:textSize="20dp"
+            android:text="Display Time"/>
+        <EditText
+            android:id="@+id/displayTime"
+            android:layout_width="250dp"
+            android:layout_height="40dp"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="15dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="left"
+            android:paddingTop="10dp"
+            android:paddingLeft="10dp"
+            android:textSize="20dp"
             android:text="Question Selection"/>
         <Spinner
             android:id="@+id/questionSelector"

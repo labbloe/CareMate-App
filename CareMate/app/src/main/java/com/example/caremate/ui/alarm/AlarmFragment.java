@@ -115,9 +115,11 @@ public class AlarmFragment extends Fragment {
                 for(int i=1; i<8; i++){
                     data = preferences.getString("alarm" + i,"").toString().split(":");
                     if(preferences.getString("alarm" + i,"").toString().contains(":"))
-                        msg += "{\"day\":\"" + data[0] + "\",\"time\":" + data[1] + "\"}";
-                    else
-                        msg += "{\"day\":\" \",\"time\": }";
+                        msg += "{\"day\":\"" + data[0] + "\",\"time\":" + data[1] + "}";
+                    else //Time sent is 2500 which is out of range and is ignored by CareMate
+                        msg += "{\"day\":\" \",\"time\": 2500}";
+                    if(i != 7)
+                        msg += ",";
                 }
                 msg += "]}";
 
