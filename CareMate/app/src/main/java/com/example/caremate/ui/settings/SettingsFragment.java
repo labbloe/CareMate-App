@@ -57,7 +57,7 @@ public class SettingsFragment extends Fragment {
                 String wifiSSID = ssid.getText().toString();
                 wifiSSID.replaceAll("\\s+","*");
                 String wifiPASS = pass.getText().toString();
-                String msg = "{\"type\":\"wifi\",\"SSID\":\"" + wifiSSID + "\",\"pass\":\"" + wifiPASS + "\",\"time\"";
+                String msg = "{\"type\":\"wifi\",\"SSID\":\"" + wifiSSID + "\",\"pass\":\"" + wifiPASS + "\",\"time\":";
                 msg += Integer.toString(currentTime.getHours()) + Integer.toString(currentTime.getMinutes()) + "}";
                 conn.sendData(msg);
                 Log.w("click", msg);

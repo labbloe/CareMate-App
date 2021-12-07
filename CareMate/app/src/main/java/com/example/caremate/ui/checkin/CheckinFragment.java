@@ -95,7 +95,7 @@ public class CheckinFragment extends Fragment {
                 editor.commit();
 
                 //Send all questions
-                String sendMsg = "{\"type\":\"question\",\"time\":" + time + "\"list\":[";
+                String sendMsg = "{\"type\":\"question\",\"time\":" + time + ",\"list\":[";
                 for(int i=0; i<7; i++) {
                     String position = "question" + Integer.toString(i+1);
                     String text = preferences.getString(position,"");
