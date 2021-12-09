@@ -51,6 +51,28 @@ public class HomeFragment extends Fragment {
         ArrayList<String> dispenseArray = new ArrayList<>();
         ArrayList<String> questionArray = new ArrayList<>();
 
+        /*String medication = "";
+        String[] tmpData;
+        String[] tmpData2;
+        String time = "";
+        char tmp;
+        for(int i=1; i<8; i++){
+            time = "";
+            medication = sharedPreferences.getString("medication" + Integer.toString(i), "");
+            tmpData = medication.split(":");
+            tmpData2 = tmpData[1].split("-");
+            for(int j=(tmpData2[0].length() - 1); j>0; j++){
+                tmp = tmpData2[0].charAt(j);
+                time += String.valueOf(tmp) + time;
+                if(j == (tmpData2[0].length() - 1) - 2)
+                        time += ":";
+            }
+
+            if(Integer.valueOf(tmpData2[0]) <= 2400)
+                dispenseArray.add((tmpData[0] + " " +time + " - " + tmpData2[1]));
+        }*/
+
+
         dispenseArray.add(sharedPreferences.getString("medication1",""));
         dispenseArray.add(sharedPreferences.getString("medication2",""));
         dispenseArray.add(sharedPreferences.getString("medication3",""));
@@ -58,6 +80,7 @@ public class HomeFragment extends Fragment {
         dispenseArray.add(sharedPreferences.getString("medication5",""));
         dispenseArray.add(sharedPreferences.getString("medication6",""));
         dispenseArray.add(sharedPreferences.getString("medication7",""));
+
 
         questionArray.add(sharedPreferences.getString("question1",""));
         questionArray.add(sharedPreferences.getString("question2",""));
