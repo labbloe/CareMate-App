@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.caremate.MainActivity;
 import com.example.caremate.R;
@@ -66,7 +67,8 @@ public class AlarmFragment extends Fragment {
         daySelectorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         daySelector_spinner.setAdapter(daySelectorAdapter);
 
-        TextView timeText = (TextView) getView().findViewById(R.id.alarmTime);
+        TimePicker timeText = (TimePicker) getView().findViewById(R.id.alarmTime);
+        timeText.setIs24HourView(true);
 
         conn = MainActivity.conn;
 
@@ -81,11 +83,16 @@ public class AlarmFragment extends Fragment {
                         if (daySelector_spinner.getItemAtPosition(i).toString().contains(data[0]))
                             daySelector_spinner.setSelection(i);
                     }
-                    if (data[1] != null)
-                        timeText.setText(data[1]);
-                }
-                else{
-                    timeText.setText("");
+                    if (data[1] != null) {
+                        String tmpTime = data[1];
+                        if(tmpTime != null) {
+                            timeText.setMinute(Integer.valueOf(String.valueOf(tmpTime.charAt(tmpTime.length()-2)) + String.valueOf(tmpTime.charAt(tmpTime.length() - 1))));
+                            if(tmpTime.length() > 3)
+                                timeText.setHour(Integer.valueOf(String.valueOf(tmpTime.charAt(tmpTime.length()-4)) + String.valueOf(tmpTime.charAt(tmpTime.length() - 3))));
+                            else
+                                timeText.setHour(Integer.valueOf(String.valueOf(tmpTime.charAt(tmpTime.length()-3))));
+                        }
+                    }
                 }
             }
 
@@ -101,7 +108,13 @@ public class AlarmFragment extends Fragment {
             public void onClick(View view){
                 String alarmNum = alarmSelector_spinner.getSelectedItem().toString();
                 String day = daySelector_spinner.getSelectedItem().toString();
-                String time = timeText.getText().toString();
+                String hour = Integer.toString(timeText.getHour());
+                String minute = Integer.toString(timeText.getMinute());
+                if(Integer.valueOf(minute) < 10)
+                    minute = "0" + minute;
+                String time = hour + minute;
+                if(Integer.valueOf(time) > 2400)
+                    time = "2500";
 
                 if(time.contains(":"))
                     time.replace(":","");

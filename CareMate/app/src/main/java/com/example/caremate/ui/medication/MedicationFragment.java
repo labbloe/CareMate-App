@@ -84,8 +84,11 @@ public class MedicationFragment extends Fragment {
                     }
                     String tmpTime = dataTmp2[0];
                     if(tmpTime != null) {
-                        dispenseTime.setMinute(Integer.valueOf(tmpTime.charAt(tmpTime.length()) + tmpTime.charAt(tmpTime.length() - 1)));
-                        dispenseTime.setHour(Integer.valueOf(tmpTime.charAt(tmpTime.length()-2) + tmpTime.charAt(tmpTime.length() - 3)));
+                        dispenseTime.setMinute(Integer.valueOf(String.valueOf(tmpTime.charAt(tmpTime.length()-2)) + String.valueOf(tmpTime.charAt(tmpTime.length() - 1))));
+                        if(tmpTime.length() > 3)
+                            dispenseTime.setHour(Integer.valueOf(String.valueOf(tmpTime.charAt(tmpTime.length()-4)) + String.valueOf(tmpTime.charAt(tmpTime.length() - 3))));
+                        else
+                            dispenseTime.setHour(Integer.valueOf(String.valueOf(tmpTime.charAt(tmpTime.length()-3))));
                     }
                     if(dataTmp2[1] != null)
                         dispenseNotes.setText(dataTmp2[1]);
@@ -104,11 +107,16 @@ public class MedicationFragment extends Fragment {
             public void onClick(View view){
                 String compartment = pillCompartment_spinner.getSelectedItem().toString();
                 String day = daySelector_spinner.getSelectedItem().toString();
-                String time = String.valueOf(dispenseTime.getHour()) + String.valueOf(dispenseTime.getMinute());
+                String hour = Integer.toString(dispenseTime.getHour());
+                String minute = Integer.toString(dispenseTime.getMinute());
+                if(Integer.valueOf(minute) < 10)
+                    minute = "0" + minute;
+                String time = hour + minute;
+                if(Integer.valueOf(time) > 2400)
+                    time = "2500";
                 String notes = dispenseNotes.getText().toString();
+                Log.w("TIME", time);
 
-                if(time.contains(":"))
-                    time.replace(":","");
 
                 String msg = "{\"type\":\"medication\",\"bin\":" + compartment + ",\"day\":\"" + day + "\",\"time\":" + time + "}";
                 //conn.sendData(msg);

@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.example.caremate.MainActivity;
 import com.example.caremate.R;
@@ -55,8 +56,17 @@ public class CheckinFragment extends Fragment {
         questionSelectorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         questionSelector_spinner.setAdapter(questionSelectorAdapter);
 
-        TextView displayTime = (TextView) getView().findViewById(R.id.displayTime);
-        displayTime.setText(preferences.getString("questionTime",""));
+        TimePicker displayTime = (TimePicker) getView().findViewById(R.id.displayTime);
+        displayTime.setIs24HourView(true);
+        //displayTime.setText(preferences.getString("questionTime",""));
+        String time = preferences.getString("questionTime","");
+        if(time != null) {
+            displayTime.setMinute(Integer.valueOf(String.valueOf(time.charAt(time.length()-2)) + String.valueOf(time.charAt(time.length() - 1))));
+            if(time.length() > 3)
+                displayTime.setHour(Integer.valueOf(String.valueOf(time.charAt(time.length()-4)) + String.valueOf(time.charAt(time.length() - 3))));
+            else
+                displayTime.setHour(Integer.valueOf(String.valueOf(time.charAt(time.length()-3))));
+        }
 
         TextView question = (TextView) getView().findViewById(R.id.questionText);
         question.setText(preferences.getString("question" + questionSelector_spinner.getSelectedItem(), ""));
@@ -80,10 +90,14 @@ public class CheckinFragment extends Fragment {
 
                 String questionNumber = questionSelector_spinner.getSelectedItem().toString();
                 String questionText = question.getText().toString();
-                String time = displayTime.getText().toString();
-
-                if(time.contains(":"))
-                    time.replace(":","");
+                String hour = Integer.toString(displayTime.getHour());
+                String minute = Integer.toString(displayTime.getMinute());
+                if(Integer.valueOf(minute) < 10)
+                    minute = "0" + minute;
+                String time = hour + minute;
+                if(Integer.valueOf(time) > 2400)
+                    time = "2500";
+                Log.w("TIME", time);
 
                 questionText.replaceAll("\\s+","*");
                 String msg = "\"question\":\"" + questionText + "\",\"number\":" + questionNumber;
