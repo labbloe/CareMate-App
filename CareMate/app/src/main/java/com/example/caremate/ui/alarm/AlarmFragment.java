@@ -103,6 +103,9 @@ public class AlarmFragment extends Fragment {
                 String day = daySelector_spinner.getSelectedItem().toString();
                 String time = timeText.getText().toString();
 
+                if(time.contains(":"))
+                    time.replace(":","");
+
                 //Store data internally using Shared Preferences
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putString("alarm" + alarmNum, day + ":" + time);

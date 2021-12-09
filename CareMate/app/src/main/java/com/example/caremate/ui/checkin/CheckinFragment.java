@@ -81,6 +81,10 @@ public class CheckinFragment extends Fragment {
                 String questionNumber = questionSelector_spinner.getSelectedItem().toString();
                 String questionText = question.getText().toString();
                 String time = displayTime.getText().toString();
+
+                if(time.contains(":"))
+                    time.replace(":","");
+
                 questionText.replaceAll("\\s+","*");
                 String msg = "\"question\":\"" + questionText + "\",\"number\":" + questionNumber;
                 //conn.sendData(msg);

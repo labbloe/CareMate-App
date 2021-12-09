@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -61,7 +62,8 @@ public class MedicationFragment extends Fragment {
         daySelectorAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         daySelector_spinner.setAdapter(daySelectorAdapter);
 
-        TextView dispenseTime = (TextView) getView().findViewById(R.id.dispenseTime);
+        TimePicker dispenseTime = (TimePicker) getView().findViewById(R.id.dispenseTime);
+        dispenseTime.setIs24HourView(true);
         TextView dispenseNotes = (TextView) getView().findViewById(R.id.dispenseNotes);
 
 
@@ -80,13 +82,15 @@ public class MedicationFragment extends Fragment {
                         if(daySelector_spinner.getItemAtPosition(i).toString().contains(dataTmp[0]))
                             daySelector_spinner.setSelection(i);
                     }
-                    if(dataTmp2[0] != null)
-                        dispenseTime.setText(dataTmp2[0]);
+                    String tmpTime = dataTmp2[0];
+                    if(tmpTime != null) {
+                        dispenseTime.setMinute(Integer.valueOf(tmpTime.charAt(tmpTime.length()) + tmpTime.charAt(tmpTime.length() - 1)));
+                        dispenseTime.setHour(Integer.valueOf(tmpTime.charAt(tmpTime.length()-2) + tmpTime.charAt(tmpTime.length() - 3)));
+                    }
                     if(dataTmp2[1] != null)
                         dispenseNotes.setText(dataTmp2[1]);
                 }
                 else{
-                    dispenseTime.setText("");
                     dispenseNotes.setText("");
                 }
             }
@@ -100,8 +104,12 @@ public class MedicationFragment extends Fragment {
             public void onClick(View view){
                 String compartment = pillCompartment_spinner.getSelectedItem().toString();
                 String day = daySelector_spinner.getSelectedItem().toString();
-                String time = dispenseTime.getText().toString();
+                String time = String.valueOf(dispenseTime.getHour()) + String.valueOf(dispenseTime.getMinute());
                 String notes = dispenseNotes.getText().toString();
+
+                if(time.contains(":"))
+                    time.replace(":","");
+
                 String msg = "{\"type\":\"medication\",\"bin\":" + compartment + ",\"day\":\"" + day + "\",\"time\":" + time + "}";
                 //conn.sendData(msg);
                 Log.w("click",msg);
